@@ -11,40 +11,17 @@ export default function AuthPage() {
   const { loginUser } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError('');
+  setLoading(true);
 
-    try {
-      let res;
-
-      if (isLogin) {
-        res = await login({
-          email: form.email,
-          password: form.password,
-        });
-      } else {
-        const fullName = form.name.trim();
-
-        let firstName = '';
-        let lastName = 'N/A';
-
-        if (fullName.includes(' ')) {
-          const parts = fullName.split(' ');
-          firstName = parts[0];
-          lastName = parts.slice(1).join(' ') || 'N/A';
-        } else {
-          firstName = fullName;
-        }
-
-        res = await register({
-          firstName,
-          lastName,
-          email: form.email,
-          password: form.password,
-        });
-      }
+  try {
+    if (isLogin) {
+      const res = await login({
+        email: form.email,
+        password: form.password,
+      });
 
       const d = res.data.data || res.data;
 
@@ -57,14 +34,39 @@ export default function AuthPage() {
       };
 
       loginUser(user, token);
-      navigate('/');
-    } catch (err) {
-      setError(err.response?.data?.message || 'Something went wrong');
-    } finally {
-      setLoading(false);
-    }
-  };
 
+      navigate('/');
+    } else {
+      const fullName = form.name.trim();
+
+      let firstName = '';
+      let lastName = '.';
+
+      if (fullName.includes(' ')) {
+        const parts = fullName.split(' ');
+        firstName = parts[0];
+        lastName = parts.slice(1).join(' ') || '.';
+      } else {
+        firstName = fullName;
+      }
+
+      await register({
+        firstName,
+        lastName,
+        email: form.email,
+        password: form.password,
+      });
+      alert('Registration successful! You can now log in.');
+
+      navigate('/login');
+      return; 
+    }
+  } catch (err) {
+    setError(err.response?.data?.message || 'Something went wrong');
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <div style={styles.page}>
       <div style={styles.card}>
