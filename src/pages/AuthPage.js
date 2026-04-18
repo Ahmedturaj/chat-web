@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { login, register } from '../utils/api';
 
@@ -15,16 +15,47 @@ export default function AuthPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
+
     try {
       let res;
+
       if (isLogin) {
-        res = await login({ email: form.email, password: form.password });
+        res = await login({
+          email: form.email,
+          password: form.password,
+        });
       } else {
-        res = await register({ name: form.name, email: form.email, password: form.password });
+        const fullName = form.name.trim();
+
+        let firstName = '';
+        let lastName = 'N/A';
+
+        if (fullName.includes(' ')) {
+          const parts = fullName.split(' ');
+          firstName = parts[0];
+          lastName = parts.slice(1).join(' ') || 'N/A';
+        } else {
+          firstName = fullName;
+        }
+
+        res = await register({
+          firstName,
+          lastName,
+          email: form.email,
+          password: form.password,
+        });
       }
+
       const d = res.data.data || res.data;
+
       const token = d.token || d.accessToken;
-      const user = d.user || { name: d.name, email: d.email, _id: d._id };
+
+      const user = d.user || {
+        name: `${d.firstName || ''} ${d.lastName || ''}`.trim(),
+        email: d.email,
+        _id: d._id,
+      };
+
       loginUser(user, token);
       navigate('/');
     } catch (err) {
@@ -66,6 +97,7 @@ export default function AuthPage() {
               />
             </div>
           )}
+
           <div style={styles.field}>
             <label style={styles.label}>Email</label>
             <input
@@ -77,6 +109,7 @@ export default function AuthPage() {
               required
             />
           </div>
+
           <div style={styles.field}>
             <label style={styles.label}>Password</label>
             <input
@@ -88,7 +121,9 @@ export default function AuthPage() {
               required
             />
           </div>
+
           {error && <div style={styles.error}>{error}</div>}
+
           <button type="submit" style={loading ? styles.btnDisabled : styles.btn} disabled={loading}>
             {loading ? <span style={styles.spinner} /> : (isLogin ? 'Sign In' : 'Create Account')}
           </button>
