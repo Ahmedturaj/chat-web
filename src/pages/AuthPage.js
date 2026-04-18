@@ -40,12 +40,12 @@ const handleSubmit = async (e) => {
       const fullName = form.name.trim();
 
       let firstName = '';
-      let lastName = '.';
+      let lastName = 'mate';
 
       if (fullName.includes(' ')) {
         const parts = fullName.split(' ');
         firstName = parts[0];
-        lastName = parts.slice(1).join(' ') || '.';
+        lastName = parts.slice(1).join(' ') || 'mate';
       } else {
         firstName = fullName;
       }
