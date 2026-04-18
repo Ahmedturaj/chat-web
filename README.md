@@ -19,7 +19,7 @@ npm start
 ## Environment Variables
 
 ```
-REACT_APP_API_URL=http://localhost:5000/api
+REACT_APP_API_URL=http://localhost:5000/api/v1
 REACT_APP_SOCKET_URL=http://localhost:5000
 ```
 
