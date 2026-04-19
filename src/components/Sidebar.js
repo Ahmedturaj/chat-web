@@ -43,7 +43,6 @@ export default function Sidebar({ myGroups, allGroups, activeGroup, onSelectGrou
 
   return (
     <div style={s.sidebar}>
-      {/* Header */}
       <div style={s.header}>
         <div style={s.logoRow}>
           <div style={s.logoIcon}>
@@ -57,7 +56,7 @@ export default function Sidebar({ myGroups, allGroups, activeGroup, onSelectGrou
         <div style={s.userRow}>
           <Avatar name={user?.name || user?.email} size={32} online={true} />
           <div style={s.userInfo}>
-            <div style={s.userName}>{user?.name || 'You'}</div>
+            <div style={s.userName}>{user?.firstName || 'You'}</div>
             <div style={s.userEmail}>{user?.email}</div>
           </div>
           <button onClick={logoutUser} style={s.logoutBtn} title="Logout">
@@ -68,13 +67,11 @@ export default function Sidebar({ myGroups, allGroups, activeGroup, onSelectGrou
         </div>
       </div>
 
-      {/* Tabs */}
       <div style={s.tabRow}>
         <button style={tab === 'my' ? s.tabActive : s.tab} onClick={() => setTab('my')}>My Groups</button>
         <button style={tab === 'all' ? s.tabActive : s.tab} onClick={() => setTab('all')}>Discover</button>
       </div>
 
-      {/* Search (on discover tab) */}
       {tab === 'all' && (
         <div style={s.searchWrap}>
           <svg style={s.searchIcon} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2.5">
@@ -89,7 +86,6 @@ export default function Sidebar({ myGroups, allGroups, activeGroup, onSelectGrou
         </div>
       )}
 
-      {/* Create Group Button */}
       {tab === 'my' && (
         <button onClick={() => setShowCreate(!showCreate)} style={s.createBtn}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
@@ -122,7 +118,7 @@ export default function Sidebar({ myGroups, allGroups, activeGroup, onSelectGrou
         </form>
       )}
 
-      {/* Group List */}
+   
       <div style={s.list}>
         {tab === 'my' && (
           myGroups.length === 0
@@ -160,6 +156,7 @@ export default function Sidebar({ myGroups, allGroups, activeGroup, onSelectGrou
                   </div>
                   <div style={s.groupInfo}>
                     <div style={s.groupName}>{group.name}</div>
+                    <text style={s.groupId}>{group._id}</text>
                     <div style={s.groupMeta}>{group.members?.length || 0} members</div>
                   </div>
                   {isMember(group) ? (
@@ -284,4 +281,13 @@ const s = {
     borderRadius: 7, cursor: 'pointer', fontSize: 12, fontWeight: 500,
     fontFamily: 'var(--font)', flexShrink: 0,
   },
+  groupId: {
+  fontSize: 10,
+  color: '#94a3b8',
+  userSelect: 'text',
+  WebkitUserSelect: 'text',
+  cursor: 'pointer',
+  fontFamily: 'monospace',
+  letterSpacing: '0.3px',
+},
 };

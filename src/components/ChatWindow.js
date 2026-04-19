@@ -62,7 +62,7 @@ export default function ChatWindow({ group, onLeaveGroup }) {
         const msgs = res.data.data || res.data;
         setMessages(Array.isArray(msgs) ? msgs : []);
       })
-      .catch(() => {});
+      .catch(() => { });
 
     // Join socket room
     if (connected) {
@@ -160,7 +160,7 @@ export default function ChatWindow({ group, onLeaveGroup }) {
         <div style={s.emptyInner}>
           <div style={s.emptyIcon}>
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" strokeWidth="1.5">
-              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
             </svg>
           </div>
           <div style={s.emptyTitle}>Select a group to start chatting</div>
@@ -192,9 +192,9 @@ export default function ChatWindow({ group, onLeaveGroup }) {
         <div style={s.headerActions}>
           <button style={s.iconBtn} onClick={() => { setShowMembers(!showMembers); if (!showMembers) getOnlineUsers(group._id); }} title="Members">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={showMembers ? '#2563eb' : '#64748b'} strokeWidth="2" strokeLinecap="round">
-              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-              <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
             </svg>
           </button>
           <button style={s.leaveBtn} onClick={() => onLeaveGroup(group._id)}>
@@ -211,7 +211,9 @@ export default function ChatWindow({ group, onLeaveGroup }) {
               <DateDivider date={day} />
               {msgs.map((msg, i) => {
                 const me = isMe(msg);
-                const senderName = msg.sender?.name || msg.sender?.email || 'Unknown';
+                const getName = (user) =>
+                  `${user?.firstName || ''} ${user?.lastName || ''}`.trim();
+                const senderName = getName(msg.sender) || user?.firstName;
                 const showAvatar = !me && isLastInGroup(msgs, i);
                 const showName = !me && (i === 0 || (msgs[i - 1].sender?._id || msgs[i - 1].sender) !== (msg.sender?._id || msg.sender));
 
@@ -272,7 +274,7 @@ export default function ChatWindow({ group, onLeaveGroup }) {
             <div style={s.membersList}>
               {group.members?.map(m => {
                 const memberId = m._id || m;
-                const memberName = m.name || m.email || memberId;
+                const memberName = m.firstName || m.email || memberId;
                 const isOnline = onlineUsers.some(u => u.userId === memberId);
                 return (
                   <div key={memberId} style={s.memberItem}>
@@ -312,14 +314,42 @@ export default function ChatWindow({ group, onLeaveGroup }) {
             onKeyDown={handleKeyDown}
             rows={1}
           />
+          <div style={s.emojiWrapper}>
+            <button
+              style={s.emojiBtn}
+              onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.2)'}
+              onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+              onClick={() => setInput(input + '😊')}
+            >
+              😊
+            </button>
+
+            <button
+              style={s.emojiBtn}
+              onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.2)'}
+              onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+              onClick={() => setInput(input + '👍')}
+            >
+              👍
+            </button>
+
+            <button
+              style={s.emojiBtn}
+              onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.2)'}
+              onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+              onClick={() => setInput(input + '❤️')}
+            >
+              ❤️
+            </button>
+          </div>
           <button
             style={input.trim() ? s.sendBtn : s.sendBtnDisabled}
             onClick={handleSend}
             disabled={!input.trim()}
           >
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
-              <line x1="22" y1="2" x2="11" y2="13"/>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              <line x1="22" y1="2" x2="11" y2="13" />
+              <polygon points="22 2 15 22 11 13 2 9 22 2" />
             </svg>
           </button>
         </div>
@@ -435,4 +465,23 @@ const s = {
     flexShrink: 0,
   },
   inputHint: { fontSize: 11, color: '#cbd5e1', marginTop: 6, textAlign: 'center' },
+  emojiWrapper: {
+    display: 'flex',
+    gap: 8,
+    marginTop: 6,
+  },
+
+  emojiBtn: {
+    background: 'transparent',
+    border: 'none',
+    padding: 0,
+    fontSize: 18,
+    cursor: 'pointer',
+    lineHeight: 1,
+    transition: 'transform 0.15s ease',
+  },
+
+  emojiBtnHover: {
+    transform: 'scale(1.2)',
+  },
 };
