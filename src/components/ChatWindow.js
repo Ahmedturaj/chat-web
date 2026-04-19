@@ -273,9 +273,11 @@ export default function ChatWindow({ group, onLeaveGroup }) {
             </div>
             <div style={s.membersList}>
               {group.members?.map(m => {
+                const getName = (u) =>
+                  `${u?.firstName || ''} ${u?.lastName || ''}`.trim() || u?.email || 'Unknown';
                 const memberId = m._id || m;
-                const memberName = m.firstName || m.email || memberId;
-                const isOnline = onlineUsers.some(u => u.userId === memberId);
+                const memberName = getName(m);
+                const isOnline = onlineUsers.some(u => u.userId === String(memberId));
                 return (
                   <div key={memberId} style={s.memberItem}>
                     <div style={{ position: 'relative' }}>
